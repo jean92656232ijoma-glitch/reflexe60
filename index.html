@@ -1,639 +1,321 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-  <meta name="theme-color" content="#10131a">
-  <meta name="mobile-web-app-capable" content="yes">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#10131a">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Réflexe 60</title>
 
-  <title>Réflexe 60</title>
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
-  <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#10131a;
+  color:white;
+  overflow:hidden;
+  user-select:none;
+}
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #10131a;
-      color: white;
-      overflow: hidden;
-      touch-action: manipulation;
-      user-select: none;
-    }
+body{
+  display:flex;
+  justify-content:center;
+}
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+.app{
+  width:100%;
+  max-width:700px;
+  min-height:100vh;
+  padding:18px 16px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-    .game {
-      width: 100%;
-      max-width: 520px;
-      height: 100vh;
-      min-height: 560px;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 20%, #252b3a 0%, #151923 38%, #0c0f15 100%);
-    }
+/* SCORE */
+.top{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
 
-    .top {
-      height: 92px;
-      padding: 14px 16px 8px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      position: relative;
-      z-index: 5;
-    }
+.box{
+  background:#292e3a;
+  border:1px solid #414754;
+  border-radius:18px;
+  padding:12px 5px;
+  text-align:center;
+  box-shadow:0 5px 18px rgba(0,0,0,.25);
+}
 
-    .stat {
-      text-align: center;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 14px;
-      padding: 8px 4px;
-      box-shadow: 0 4px 15px rgba(0,0,0,.2);
-    }
+.label{
+  color:#b8bdc8;
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
 
-    .label {
-      font-size: 11px;
-      opacity: .65;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-    }
+.value{
+  margin-top:4px;
+  font-size:30px;
+  font-weight:800;
+}
 
-    .value {
-      font-size: 23px;
-      font-weight: 800;
-      margin-top: 2px;
-    }
+#time{
+  color:#58e39c;
+}
 
-    #timer {
-      color: #65e6a6;
-    }
+/* GAME */
+.game{
+  position:relative;
+  flex:1;
+  min-height:430px;
+  border:2px solid #292e39;
+  border-radius:32px;
+  background:
+    radial-gradient(circle at 50% 45%,#171c27 0%,#10131a 65%);
+  overflow:hidden;
+  box-shadow:
+    inset 0 0 40px rgba(0,0,0,.4),
+    0 8px 30px rgba(0,0,0,.25);
+}
 
-    .arena {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      top: 103px;
-      bottom: 88px;
-      border-radius: 25px;
-      border: 2px solid rgba(255,255,255,.08);
-      background: rgba(0,0,0,.18);
-      overflow: hidden;
-      box-shadow:
-        inset 0 0 40px rgba(0,0,0,.3),
-        0 12px 35px rgba(0,0,0,.3);
-    }
+.message{
+  position:absolute;
+  left:20px;
+  right:20px;
+  top:50%;
+  transform:translateY(-50%);
+  text-align:center;
+  pointer-events:none;
+}
 
-    .target {
-      position: absolute;
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      font-size: 28px;
-      font-weight: 900;
-      color: white;
-      cursor: pointer;
-      transform: scale(.7);
-      transition: transform .08s ease;
-      box-shadow:
-        0 0 0 5px rgba(255,255,255,.12),
-        0 0 28px rgba(255,255,255,.28);
-    }
+.message h1{
+  margin:0 0 12px;
+  font-size:40px;
+  font-weight:900;
+}
 
-    .target.show {
-      display: flex;
-      animation: appear .12s ease-out forwards;
-    }
+.message p{
+  margin:0;
+  color:#b9bec9;
+  font-size:17px;
+  line-height:1.55;
+}
 
-    .target:active {
-      transform: scale(.88);
-    }
+.target{
+  position:absolute;
+  display:none;
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  cursor:pointer;
+  touch-action:manipulation;
+  background:
+    radial-gradient(circle,#fff 0 12%,#ffefef 13% 25%,#ff3d63 26% 55%,#c9143e 56% 100%);
+  border:4px solid white;
+  box-shadow:
+    0 0 0 7px rgba(255,61,99,.18),
+    0 0 30px rgba(255,61,99,.75);
+  transform:translate(-50%,-50%);
+  animation:pulse .7s infinite alternate;
+}
 
-    @keyframes appear {
-      from {
-        transform: scale(.55);
-        opacity: .2;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
+.target.hit{
+  animation:none;
+  transform:translate(-50%,-50%) scale(1.35);
+  opacity:0;
+  transition:.12s;
+}
 
-    .target.good {
-      background: linear-gradient(135deg,#27d17f,#0aa95d);
-    }
+@keyframes pulse{
+  from{filter:brightness(.9); }
+  to{filter:brightness(1.25); }
+}
 
-    .target.gold {
-      background: linear-gradient(135deg,#ffd95a,#f59e0b);
-      color: #201500;
-    }
+/* CONTROLS */
+.controls{
+  display:flex;
+  gap:10px;
+}
 
-    .target.bad {
-      background: linear-gradient(135deg,#ff6678,#dc263f);
-    }
+button{
+  border:0;
+  border-radius:18px;
+  padding:16px 20px;
+  font-size:17px;
+  font-weight:800;
+  color:white;
+  cursor:pointer;
+  touch-action:manipulation;
+}
 
-    .message {
-      position: absolute;
-      left: 20px;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      text-align: center;
-      pointer-events: none;
-      z-index: 2;
-    }
+#start{
+  flex:1;
+  background:linear-gradient(135deg,#5968ff,#8b45ff);
+  box-shadow:0 8px 25px rgba(91,82,255,.35);
+}
 
-    .message h1 {
-      margin: 0 0 8px;
-      font-size: 36px;
-      font-weight: 900;
-      letter-spacing: -1px;
-    }
+#start:active{
+  transform:scale(.97);
+}
 
-    .message p {
-      margin: 0;
-      color: rgba(255,255,255,.65);
-      font-size: 15px;
-      line-height: 1.5;
-    }
+#reset{
+  width:110px;
+  background:#292e3a;
+  border:1px solid #414754;
+}
 
-    .bottom {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: 15px;
-      height: 58px;
-      display: flex;
-      gap: 10px;
-      z-index: 8;
-    }
+/* GAME OVER */
+.result{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(10,12,18,.88);
+  backdrop-filter:blur(8px);
+  text-align:center;
+  padding:30px;
+}
 
-    button {
-      border: 0;
-      border-radius: 16px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      color: white;
-    }
+.result-card{
+  width:100%;
+  max-width:400px;
+  background:#202530;
+  border:1px solid #3c4350;
+  border-radius:26px;
+  padding:30px 20px;
+  box-shadow:0 15px 50px rgba(0,0,0,.5);
+}
 
-    #startBtn {
-      flex: 1;
-      background: linear-gradient(135deg,#5b6cff,#814dff);
-      box-shadow: 0 7px 22px rgba(91,108,255,.28);
-    }
+.result h2{
+  margin:0 0 10px;
+  font-size:32px;
+}
 
-    #startBtn:active {
-      transform: scale(.97);
-    }
+.final-score{
+  font-size:55px;
+  font-weight:900;
+  margin:10px 0;
+}
 
-    #soundBtn {
-      width: 58px;
-      background: rgba(255,255,255,.09);
-      border: 1px solid rgba(255,255,255,.1);
-      font-size: 22px;
-    }
+.best{
+  color:#58e39c;
+  font-size:17px;
+}
 
-    .combo {
-      position: absolute;
-      top: 106px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 7;
-      font-weight: 900;
-      font-size: 14px;
-      padding: 5px 11px;
-      border-radius: 20px;
-      background: rgba(255,193,7,.12);
-      color: #ffd95a;
-      opacity: 0;
-      transition: opacity .2s;
-    }
+@media(max-width:420px){
+  .app{
+    padding:12px 12px 10px;
+  }
 
-    .combo.visible {
-      opacity: 1;
-    }
+  .message h1{
+    font-size:32px;
+  }
 
-    .flash {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0;
-      z-index: 20;
-    }
+  .message p{
+    font-size:15px;
+  }
 
-    .flash.success {
-      background: rgba(40,220,130,.13);
-      animation: flash .18s ease;
-    }
+  .game{
+    min-height:400px;
+    border-radius:26px;
+  }
 
-    .flash.fail {
-      background: rgba(255,50,70,.2);
-      animation: flash .2s ease;
-    }
+  .value{
+    font-size:27px;
+  }
 
-    @keyframes flash {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
-    }
+  .target{
+    width:62px;
+    height:62px;
+  }
 
-    .overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 30;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(6,8,12,.82);
-      backdrop-filter: blur(7px);
-      padding: 25px;
-    }
-
-    .overlay.show {
-      display: flex;
-    }
-
-    .result {
-      width: 100%;
-      max-width: 380px;
-      background: #171b25;
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 25px;
-      padding: 28px 22px;
-      text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,.5);
-    }
-
-    .result h2 {
-      margin: 0 0 5px;
-      font-size: 30px;
-    }
-
-    .finalScore {
-      font-size: 58px;
-      font-weight: 900;
-      margin: 8px 0 18px;
-    }
-
-    .resultGrid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 9px;
-      margin-bottom: 20px;
-    }
-
-    .resultItem {
-      background: rgba(255,255,255,.06);
-      border-radius: 13px;
-      padding: 10px;
-    }
-
-    .resultItem small {
-      display: block;
-      opacity: .55;
-      font-size: 11px;
-      margin-bottom: 3px;
-    }
-
-    .resultItem strong {
-      font-size: 19px;
-    }
-
-    #againBtn {
-      width: 100%;
-      height: 52px;
-      background: linear-gradient(135deg,#5b6cff,#814dff);
-    }
-
-    .best {
-      color: #ffd95a;
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-height: 650px) {
-      .top {
-        height: 78px;
-      }
-
-      .arena {
-        top: 88px;
-        bottom: 78px;
-      }
-
-      .message h1 {
-        font-size: 30px;
-      }
-
-      .bottom {
-        height: 50px;
-        bottom: 10px;
-      }
-
-      .combo {
-        top: 90px;
-      }
-    }
-  </style>
+  #reset{
+    width:95px;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <div class="game">
+<div class="app">
 
-    <div class="top">
-      <div class="stat">
-        <div class="label">Score</div>
-        <div class="value" id="score">0</div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Temps</div>
-        <div class="value" id="timer">60</div>
-      </div>
-
-      <div class="stat">
-        <div class="label">Record</div>
-        <div class="value" id="best">0</div>
-      </div>
+  <div class="top">
+    <div class="box">
+      <div class="label">Score</div>
+      <div class="value" id="score">0</div>
     </div>
 
-    <div class="combo" id="combo">🔥 COMBO x1</div>
-
-    <div class="arena" id="arena">
-
-      <div class="message" id="message">
-        <h1>⚡ Réflexe 60</h1>
-        <p>
-          Appuie sur les cibles le plus rapidement possible.<br>
-          Tu as 60 secondes !
-        </p>
-      </div>
-
-      <div class="target good" id="target">●</div>
-
+    <div class="box">
+      <div class="label">Temps</div>
+      <div class="value" id="time">60</div>
     </div>
 
-    <div class="bottom">
-      <button id="startBtn">▶ COMMENCER</button>
-      <button id="soundBtn" aria-label="Son">🔊</button>
+    <div class="box">
+      <div class="label">Record</div>
+      <div class="value" id="record">0</div>
+    </div>
+  </div>
+
+  <div class="game" id="game">
+
+    <div class="message" id="message">
+      <h1>⚡ Réflexe 60</h1>
+      <p>
+        Appuie sur les cibles<br>
+        le plus rapidement possible.<br>
+        Tu as <b>60 secondes !</b>
+      </p>
     </div>
 
-    <div class="flash" id="flash"></div>
+    <div class="target" id="target"></div>
 
-    <div class="overlay" id="overlay">
-      <div class="result">
-
+    <div class="result" id="result">
+      <div class="result-card">
         <h2>⏱️ Temps écoulé !</h2>
-
-        <div class="finalScore" id="finalScore">0</div>
-
-        <div class="best" id="recordText">
-          🏆 Nouveau record !
-        </div>
-
-        <div class="resultGrid">
-
-          <div class="resultItem">
-            <small>CIBLES</small>
-            <strong id="hits">0</strong>
-          </div>
-
-          <div class="resultItem">
-            <small>ERREURS</small>
-            <strong id="misses">0</strong>
-          </div>
-
-          <div class="resultItem">
-            <small>MEILLEUR COMBO</small>
-            <strong id="maxCombo">0</strong>
-          </div>
-
-          <div class="resultItem">
-            <small>RÉFLEXE MOYEN</small>
-            <strong id="reaction">0 ms</strong>
-          </div>
-
-        </div>
-
-        <button id="againBtn">🔄 REJOUER</button>
-
+        <div class="final-score" id="finalScore">0</div>
+        <div class="best" id="bestText"></div>
       </div>
     </div>
 
   </div>
 
+  <div class="controls">
+    <button id="start">▶️ JOUER</button>
+    <button id="reset">↻ RESET</button>
+  </div>
+
+</div>
+
 <script>
-(function () {
-
-  "use strict";
-
-  const GAME_TIME = 60;
-
-  const arena = document.getElementById("arena");
-  const target = document.getElementById("target");
-  const message = document.getElementById("message");
-
-  const scoreEl = document.getElementById("score");
-  const timerEl = document.getElementById("timer");
-  const bestEl = document.getElementById("best");
-
-  const startBtn = document.getElementById("startBtn");
-  const soundBtn = document.getElementById("soundBtn");
-
-  const comboEl = document.getElementById("combo");
-  const flash = document.getElementById("flash");
-
-  const overlay = document.getElementById("overlay");
-  const finalScore = document.getElementById("finalScore");
-  const hitsEl = document.getElementById("hits");
-  const missesEl = document.getElementById("misses");
-  const maxComboEl = document.getElementById("maxCombo");
-  const reactionEl = document.getElementById("reaction");
-  const recordText = document.getElementById("recordText");
-  const againBtn = document.getElementById("againBtn");
-
-  let score = 0;
-  let timeLeft = GAME_TIME;
-  let hits = 0;
-  let misses = 0;
-
-  let combo = 0;
-  let maxCombo = 0;
-
-  let gameRunning = false;
-  let timerInterval = null;
-
-  let targetTime = 0;
-  let reactionTotal = 0;
-
-  let soundOn = true;
-
-  let bestScore = Number(localStorage.getItem("reflexe60_best") || 0);
-
-  bestEl.textContent = bestScore;
-
-  /* ---------------- SOUND ---------------- */
-
-  let audioContext = null;
-
-  function beep(frequency, duration, type) {
-
-    if (!soundOn) return;
-
-    try {
-
-      if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      }
-
-      const oscillator = audioContext.createOscillator();
-      const gain = audioContext.createGain();
-
-      oscillator.type = type || "sine";
-      oscillator.frequency.value = frequency;
-
-      gain.gain.setValueAtTime(.001, audioContext.currentTime);
-      gain.gain.exponentialRampToValueAtTime(.12, audioContext.currentTime + .01);
-      gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
-
-      oscillator.connect(gain);
-      gain.connect(audioContext.destination);
-
-      oscillator.start();
-      oscillator.stop(audioContext.currentTime + duration);
-
-    } catch (e) {}
-  }
-
-  soundBtn.addEventListener("click", function () {
-
-    soundOn = !soundOn;
-
-    soundBtn.textContent = soundOn ? "🔊" : "🔇";
-
-    if (soundOn) {
-      beep(700, .08, "sine");
-    }
-  });
-
-  /* ---------------- UTILITIES ---------------- */
-
-  function updateDisplay() {
-
-    scoreEl.textContent = score;
-    timerEl.textContent = timeLeft;
-    bestEl.textContent = bestScore;
-
-    if (timeLeft <= 10) {
-      timerEl.style.color = "#ff6678";
-    } else {
-      timerEl.style.color = "#65e6a6";
-    }
-  }
-
-  function random(min, max) {
-    return Math.random() * (max - min) + min;
-  }
-
-  function showFlash(type) {
-
-    flash.className = "flash " + type;
-
-    setTimeout(function () {
-      flash.className = "flash";
-    }, 220);
-  }
-
-  function updateCombo() {
-
-    if (combo >= 2) {
-
-      comboEl.textContent = "🔥 COMBO x" + combo;
-      comboEl.classList.add("visible");
-
-    } else {
-
-      comboEl.classList.remove("visible");
-    }
-  }
-
-  /* ---------------- TARGET ---------------- */
-
-  function moveTarget() {
-
-    if (!gameRunning) return;
-
-    const rect = arena.getBoundingClientRect();
-
-    const size = Math.max(
-      54,
-      Math.min(78, 74 - Math.floor(hits / 10) * 2)
-    );
-
-    target.style.width = size + "px";
-    target.style.height = size + "px";
-
-    const maxX = rect.width - size - 8;
-    const maxY = rect.height - size - 8;
-
-    const x = random(8, Math.max(8, maxX));
-    const y = random(8, Math.max(8, maxY));
-
-    target.style.left = x + "px";
-    target.style.top = y + "px";
-
-    /* Petite variation de couleur */
-    target.classList.remove("gold");
-    target.classList.remove("bad");
-
-    if (Math.random() < .10) {
-      target.classList.add("gold");
-      target.textContent = "★";
-    } else {
-      target.textContent = "●";
-    }
-
-    target.classList.remove("show");
-
-    /* Force le navigateur à rejouer l'animation */
-    void target.offsetWidth;
-
-    target.classList.add("show");
-
-    targetTime = performance.now();
-  }
-
-  /* ---------------- HIT ---------------- */
-
-  target.addEventListener("pointerdown", function (event) {
-
-    event.preventDefault();
-
-    if (!gameRunning) return;
-
-    const reaction = performance.now() - targetTime;
-
-    reactionTotal += reaction;
-
-    hits++;
-
-    combo++;
-
-    if (combo
+const game = document.getElementById("game");
+const target = document.getElementById("target");
+const message = document.getElementById("message");
+const result = document.getElementById("result");
+
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
+const recordEl = document.getElementById("record");
+
+const startBtn = document.getElementById("start");
+const resetBtn = document.getElementById("reset");
+
+const finalScore = document.getElementById("finalScore");
+const bestText = document.getElementById("bestText");
+
+let score = 0;
+let time = 60;
+let playing = false;
+let timer = null;
+let record = Number(localStorage.get
