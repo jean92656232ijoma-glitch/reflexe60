@@ -1,312 +1,639 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#10131a">
-<title>Réflexe 60 — v2.0</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:linear-gradient(135deg,#090c12,#1c2435 55%,#10131a);color:#fff;min-height:100vh}
-.wrap{max-width:680px;margin:auto;padding:14px}
-.card{background:rgba(23,27,37,.96);border:1px solid #303747;border-radius:24px;padding:16px;box-shadow:0 18px 45px #0008}
-h1{margin:0;font-size:34px;letter-spacing:-1px}
-.sub{color:#aeb7c9;margin:2px 0 14px}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.stat{background:#222838;border-radius:15px;padding:9px;text-align:center;border:1px solid #30384b}
-.stat b{display:block;font-size:21px}
-.stat small{color:#aeb7c9}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-button{border:0;border-radius:13px;padding:12px 14px;font-weight:800;font-size:15px;background:#fff;color:#111;cursor:pointer;touch-action:manipulation}
-button:active{transform:scale(.97)}
-.primary{background:#ffd83d}.secondary{background:#2a3142;color:#fff}.danger{background:#ff5a65;color:#fff}
-.msg{text-align:center;color:#dce4f2;min-height:27px;font-weight:700}
-.progress{height:7px;background:#252c3c;border-radius:99px;overflow:hidden;margin:4px 0 10px}
-.progress i{display:block;height:100%;width:100%;background:#ffd83d;border-radius:99px;transition:width .25s linear}
-.arena{position:relative;height:390px;background:radial-gradient(circle at 50% 40%,#303b59,#10131a 72%);border-radius:20px;overflow:hidden;border:1px solid #394157;margin:10px 0;box-shadow:inset 0 0 50px #0005}
-.arena.running{box-shadow:inset 0 0 55px #0006,0 0 0 1px #ffd83d22}
-.target{position:absolute;border-radius:50%;box-shadow:0 0 0 4px #fff2,0 0 28px currentColor;touch-action:manipulation;animation:pop .12s ease-out;z-index:2}
-.target:after{content:"";position:absolute;inset:18%;border:2px solid #fff8;border-radius:50%}
-@keyframes pop{from{transform:scale(.6);opacity:.2}to{transform:scale(1);opacity:1}}
-.hit{animation:hit .18s forwards}
-@keyframes hit{to{transform:scale(1.8);opacity:0}}
-.bonus{position:absolute;border-radius:50%;width:54px;height:54px;display:grid;place-items:center;background:#fff;color:#111;font-size:25px;box-shadow:0 0 25px #fff;animation:bonus 1.3s ease-in-out infinite alternate;z-index:3}
-@keyframes bonus{to{transform:scale(1.12) rotate(5deg)}}
-.float{position:absolute;pointer-events:none;font-weight:900;font-size:20px;animation:float .7s forwards;z-index:5}
-@keyframes float{to{transform:translateY(-55px);opacity:0}}
-.shop{margin-top:14px}.shop h2{margin:8px 0}
-.shopgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.item{background:#222838;border-radius:14px;padding:11px;display:flex;align-items:center;gap:9px;border:1px solid #30384b}
-.ball{width:30px;height:30px;border-radius:50%;box-shadow:0 0 15px currentColor;flex:none}
-.item button{margin-left:auto;padding:8px 9px;font-size:12px}
-.owned{color:#8fffa3;font-size:12px}
-.badges{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0}
-.badge{background:#222838;border:1px solid #30384b;border-radius:10px;padding:7px 9px;font-size:12px}
-.footer{text-align:center;color:#7f899d;font-size:12px;margin-top:12px}
-@media(max-width:430px){.stats{grid-template-columns:repeat(2,1fr)}.arena{height:360px}.wrap{padding:9px}.card{padding:13px}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#10131a">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <title>Réflexe 60</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #10131a;
+      color: white;
+      overflow: hidden;
+      touch-action: manipulation;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 520px;
+      height: 100vh;
+      min-height: 560px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 20%, #252b3a 0%, #151923 38%, #0c0f15 100%);
+    }
+
+    .top {
+      height: 92px;
+      padding: 14px 16px 8px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      position: relative;
+      z-index: 5;
+    }
+
+    .stat {
+      text-align: center;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 8px 4px;
+      box-shadow: 0 4px 15px rgba(0,0,0,.2);
+    }
+
+    .label {
+      font-size: 11px;
+      opacity: .65;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    .value {
+      font-size: 23px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    #timer {
+      color: #65e6a6;
+    }
+
+    .arena {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      top: 103px;
+      bottom: 88px;
+      border-radius: 25px;
+      border: 2px solid rgba(255,255,255,.08);
+      background: rgba(0,0,0,.18);
+      overflow: hidden;
+      box-shadow:
+        inset 0 0 40px rgba(0,0,0,.3),
+        0 12px 35px rgba(0,0,0,.3);
+    }
+
+    .target {
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: white;
+      cursor: pointer;
+      transform: scale(.7);
+      transition: transform .08s ease;
+      box-shadow:
+        0 0 0 5px rgba(255,255,255,.12),
+        0 0 28px rgba(255,255,255,.28);
+    }
+
+    .target.show {
+      display: flex;
+      animation: appear .12s ease-out forwards;
+    }
+
+    .target:active {
+      transform: scale(.88);
+    }
+
+    @keyframes appear {
+      from {
+        transform: scale(.55);
+        opacity: .2;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .target.good {
+      background: linear-gradient(135deg,#27d17f,#0aa95d);
+    }
+
+    .target.gold {
+      background: linear-gradient(135deg,#ffd95a,#f59e0b);
+      color: #201500;
+    }
+
+    .target.bad {
+      background: linear-gradient(135deg,#ff6678,#dc263f);
+    }
+
+    .message {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .message h1 {
+      margin: 0 0 8px;
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .message p {
+      margin: 0;
+      color: rgba(255,255,255,.65);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .bottom {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 15px;
+      height: 58px;
+      display: flex;
+      gap: 10px;
+      z-index: 8;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      color: white;
+    }
+
+    #startBtn {
+      flex: 1;
+      background: linear-gradient(135deg,#5b6cff,#814dff);
+      box-shadow: 0 7px 22px rgba(91,108,255,.28);
+    }
+
+    #startBtn:active {
+      transform: scale(.97);
+    }
+
+    #soundBtn {
+      width: 58px;
+      background: rgba(255,255,255,.09);
+      border: 1px solid rgba(255,255,255,.1);
+      font-size: 22px;
+    }
+
+    .combo {
+      position: absolute;
+      top: 106px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 7;
+      font-weight: 900;
+      font-size: 14px;
+      padding: 5px 11px;
+      border-radius: 20px;
+      background: rgba(255,193,7,.12);
+      color: #ffd95a;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .combo.visible {
+      opacity: 1;
+    }
+
+    .flash {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      z-index: 20;
+    }
+
+    .flash.success {
+      background: rgba(40,220,130,.13);
+      animation: flash .18s ease;
+    }
+
+    .flash.fail {
+      background: rgba(255,50,70,.2);
+      animation: flash .2s ease;
+    }
+
+    @keyframes flash {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(6,8,12,.82);
+      backdrop-filter: blur(7px);
+      padding: 25px;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .result {
+      width: 100%;
+      max-width: 380px;
+      background: #171b25;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 25px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .result h2 {
+      margin: 0 0 5px;
+      font-size: 30px;
+    }
+
+    .finalScore {
+      font-size: 58px;
+      font-weight: 900;
+      margin: 8px 0 18px;
+    }
+
+    .resultGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+
+    .resultItem {
+      background: rgba(255,255,255,.06);
+      border-radius: 13px;
+      padding: 10px;
+    }
+
+    .resultItem small {
+      display: block;
+      opacity: .55;
+      font-size: 11px;
+      margin-bottom: 3px;
+    }
+
+    .resultItem strong {
+      font-size: 19px;
+    }
+
+    #againBtn {
+      width: 100%;
+      height: 52px;
+      background: linear-gradient(135deg,#5b6cff,#814dff);
+    }
+
+    .best {
+      color: #ffd95a;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+    @media (max-height: 650px) {
+      .top {
+        height: 78px;
+      }
+
+      .arena {
+        top: 88px;
+        bottom: 78px;
+      }
+
+      .message h1 {
+        font-size: 30px;
+      }
+
+      .bottom {
+        height: 50px;
+        bottom: 10px;
+      }
+
+      .combo {
+        top: 90px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap"><div class="card">
-<h1>⚡ Réflexe 60</h1>
-<div class="sub">Touchez les cibles le plus vite possible.</div>
 
-<div class="stats">
-<div class="stat"><b id="score">0</b><small>Score</small></div>
-<div class="stat"><b id="time">60</b><small>Temps</small></div>
-<div class="stat"><b id="level">1</b><small>Niveau</small></div>
-<div class="stat"><b id="coins">0</b><small>🪙 Pièces</small></div>
-</div>
+  <div class="game">
 
-<div class="progress"><i id="timebar"></i></div>
+    <div class="top">
+      <div class="stat">
+        <div class="label">Score</div>
+        <div class="value" id="score">0</div>
+      </div>
 
-<div class="row">
-<button id="start" class="primary">Commencer</button>
-<button id="sound" class="secondary">🔊 Son ON</button>
-<button id="reset" class="danger">Réinitialiser</button>
-</div>
+      <div class="stat">
+        <div class="label">Temps</div>
+        <div class="value" id="timer">60</div>
+      </div>
 
-<div class="msg" id="msg">Touchez les cibles. Un combo augmente votre multiplicateur.</div>
-<div class="badges">
-<span class="badge">🏆 Meilleur : <b id="best">0</b></span>
-<span class="badge">🔥 Combo : <b id="combo">0</b></span>
-<span class="badge">🎯 Précision : <b id="accuracy">100%</b></span>
-</div>
+      <div class="stat">
+        <div class="label">Record</div>
+        <div class="value" id="best">0</div>
+      </div>
+    </div>
 
-<div class="arena" id="arena"></div>
+    <div class="combo" id="combo">🔥 COMBO x1</div>
 
-<div class="shop"><h2>🛍️ Boutique</h2><div class="shopgrid" id="shop"></div></div>
-<div class="footer">Réflexe 60 v2.0 — progression sauvegardée sur cet appareil.</div>
-</div></div>
+    <div class="arena" id="arena">
+
+      <div class="message" id="message">
+        <h1>⚡ Réflexe 60</h1>
+        <p>
+          Appuie sur les cibles le plus rapidement possible.<br>
+          Tu as 60 secondes !
+        </p>
+      </div>
+
+      <div class="target good" id="target">●</div>
+
+    </div>
+
+    <div class="bottom">
+      <button id="startBtn">▶ COMMENCER</button>
+      <button id="soundBtn" aria-label="Son">🔊</button>
+    </div>
+
+    <div class="flash" id="flash"></div>
+
+    <div class="overlay" id="overlay">
+      <div class="result">
+
+        <h2>⏱️ Temps écoulé !</h2>
+
+        <div class="finalScore" id="finalScore">0</div>
+
+        <div class="best" id="recordText">
+          🏆 Nouveau record !
+        </div>
+
+        <div class="resultGrid">
+
+          <div class="resultItem">
+            <small>CIBLES</small>
+            <strong id="hits">0</strong>
+          </div>
+
+          <div class="resultItem">
+            <small>ERREURS</small>
+            <strong id="misses">0</strong>
+          </div>
+
+          <div class="resultItem">
+            <small>MEILLEUR COMBO</small>
+            <strong id="maxCombo">0</strong>
+          </div>
+
+          <div class="resultItem">
+            <small>RÉFLEXE MOYEN</small>
+            <strong id="reaction">0 ms</strong>
+          </div>
+
+        </div>
+
+        <button id="againBtn">🔄 REJOUER</button>
+
+      </div>
+    </div>
+
+  </div>
 
 <script>
-const balls=[
- {id:'red',name:'Rouge',rarity:'Classique',price:0,color:'#ff3b4f'},
- {id:'blue',name:'Bleu',rarity:'Rapide',price:50,color:'#3195ff'},
- {id:'black',name:'Noir',rarity:'Solide',price:100,color:'#111'},
- {id:'green',name:'Vert',rarity:'Rare',price:180,color:'#31e875'},
- {id:'purple',name:'Violet',rarity:'Élite',price:300,color:'#b25cff'},
- {id:'gold',name:'Or',rarity:'Légendaire',price:500,color:'#ffd43b'}
-];
+(function () {
 
-let save=JSON.parse(localStorage.getItem('reflexe60')||'null')||{
- coins:0,owned:['red'],selected:'red',best:0
-};
-let running=false,score=0,time=60,level=1,streak=0,combo=0,hits=0,misses=0;
-let timer=null,target=null,bonus=null,soundOn=true,audio=null,musicTimer=null,spawnToken=0;
+  "use strict";
 
-const $=id=>document.getElementById(id);
+  const GAME_TIME = 60;
 
-function persist(){localStorage.setItem('reflexe60',JSON.stringify(save))}
+  const arena = document.getElementById("arena");
+  const target = document.getElementById("target");
+  const message = document.getElementById("message");
 
-function render(){
- $('coins').textContent=save.coins;
- $('best').textContent=save.best;
- $('shop').innerHTML=balls.map(b=>`
- <div class="item">
-  <span class="ball" style="background:${b.color};color:${b.color}"></span>
-  <div><b>${b.name}</b><br><small>${b.rarity} · ${b.price} 🪙</small><br>
-  <span class="owned">${save.selected===b.id?'Équipée':save.owned.includes(b.id)?'Possédée':''}</span></div>
-  <button class="secondary" onclick="buy('${b.id}')">${save.selected===b.id?'✓':save.owned.includes(b.id)?'Équiper':b.price?'Acheter':'Équiper'}</button>
- </div>`).join('');
-}
+  const scoreEl = document.getElementById("score");
+  const timerEl = document.getElementById("timer");
+  const bestEl = document.getElementById("best");
 
-function buy(id){
- let b=balls.find(x=>x.id===id);
- if(save.owned.includes(id)){
-  save.selected=id;persist();render();beep(660,.1,'sine',.05);return;
- }
- if(save.coins>=b.price){
-  save.coins-=b.price;save.owned.push(id);save.selected=id;
-  persist();render();beep(660,.1,'sine',.05);
- }else{
-  $('msg').textContent='🪙 Pas assez de pièces pour cette boule.';
-  beep(120,.12,'sawtooth',.04);
- }
-}
+  const startBtn = document.getElementById("startBtn");
+  const soundBtn = document.getElementById("soundBtn");
 
-function beep(f,d,type='sine',v=.06){
- if(!soundOn)return;
- try{
-  audio=audio||new AudioContext();
-  if(audio.state==='suspended')audio.resume();
-  let o=audio.createOscillator(),g=audio.createGain();
-  o.type=type;o.frequency.value=f;g.gain.value=v;o.connect(g);g.connect(audio.destination);
-  o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d);
- }catch(e){}
-}
+  const comboEl = document.getElementById("combo");
+  const flash = document.getElementById("flash");
 
-function music(){
- if(!soundOn||musicTimer)return;
- let notes=[196,247,294,247,220,294,330,294],i=0;
- musicTimer=setInterval(()=>{if(running)beep(notes[i++%notes.length],.16,'triangle',.012)},650);
-}
-function stopMusic(){clearInterval(musicTimer);musicTimer=null}
+  const overlay = document.getElementById("overlay");
+  const finalScore = document.getElementById("finalScore");
+  const hitsEl = document.getElementById("hits");
+  const missesEl = document.getElementById("misses");
+  const maxComboEl = document.getElementById("maxCombo");
+  const reactionEl = document.getElementById("reaction");
+  const recordText = document.getElementById("recordText");
+  const againBtn = document.getElementById("againBtn");
 
-function update(){
- $('score').textContent=score;
- $('time').textContent=time;
- $('level').textContent=level;
- $('coins').textContent=save.coins;
- $('best').textContent=save.best;
- $('combo').textContent=combo;
- let total=hits+misses;
- $('accuracy').textContent=(total?Math.round(hits/total*100):100)+'%';
- $('timebar').style.width=(time/60*100)+'%';
-}
+  let score = 0;
+  let timeLeft = GAME_TIME;
+  let hits = 0;
+  let misses = 0;
 
-function floatText(text,x,y){
- let f=document.createElement('div');f.className='float';f.textContent=text;
- f.style.left=x+'px';f.style.top=y+'px';$('arena').appendChild(f);
- setTimeout(()=>f.remove(),700);
-}
+  let combo = 0;
+  let maxCombo = 0;
 
-function spawn(){
- if(!running)return;
- spawnToken++;
- const token=spawnToken;
- if(target)target.remove();
- if(bonus)bonus.remove();
- bonus=null;
+  let gameRunning = false;
+  let timerInterval = null;
 
- let el=document.createElement('div');el.className='target';
- let b=balls.find(x=>x.id===save.selected);
- let size=Math.max(38,72-(level-1)*3.2);
- el.style.width=el.style.height=size+'px';
- el.style.background=b.color;el.style.color=b.color;
+  let targetTime = 0;
+  let reactionTotal = 0;
 
- let arena=$('arena');
- let maxX=Math.max(4,arena.clientWidth-size);
- let maxY=Math.max(4,arena.clientHeight-size);
- el.style.left=Math.max(4,Math.random()*maxX)+'px';
- el.style.top=Math.max(4,Math.random()*maxY)+'px';
+  let soundOn = true;
 
- el.onpointerdown=e=>{
-  e.preventDefault();
-  if(!running)return;
-  hit(el);
- };
- arena.appendChild(el);target=el;
+  let bestScore = Number(localStorage.getItem("reflexe60_best") || 0);
 
- let life=Math.max(360,1450-(level-1)*85);
- setTimeout(()=>{
-  if(running&&target===el&&token===spawnToken){
-   misses++;streak=0;combo=0;score=Math.max(0,score-3);
-   $('msg').textContent='💨 Trop lent ! Le combo est perdu.';
-   beep(130,.08,'sawtooth',.04);
-   spawn();update();
+  bestEl.textContent = bestScore;
+
+  /* ---------------- SOUND ---------------- */
+
+  let audioContext = null;
+
+  function beep(frequency, duration, type) {
+
+    if (!soundOn) return;
+
+    try {
+
+      if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = type || "sine";
+      oscillator.frequency.value = frequency;
+
+      gain.gain.setValueAtTime(.001, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(.12, audioContext.currentTime + .01);
+      gain.gain.exponentialRampToValueAtTime(.001, audioContext.currentTime + duration);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + duration);
+
+    } catch (e) {}
   }
- },life);
 
- // Une chance de faire apparaître un bonus.
- if(level>=2 && Math.random()<.12){
-  setTimeout(()=>spawnBonus(token),Math.min(400,life*.45));
- }
-}
+  soundBtn.addEventListener("click", function () {
 
-function spawnBonus(token){
- if(!running||token!==spawnToken||bonus)return;
- let el=document.createElement('div');el.className='bonus';
- let types=[
-  {icon:'⏱️',type:'time'},
-  {icon:'💰',type:'coins'},
-  {icon:'🔥',type:'double'}
- ];
- let pick=types[Math.floor(Math.random()*types.length)];
- el.textContent=pick.icon;el.dataset.type=pick.type;
- let arena=$('arena');
- el.style.left=Math.max(5,Math.random()*(arena.clientWidth-64))+'px';
- el.style.top=Math.max(5,Math.random()*(arena.clientHeight-64))+'px';
- el.onpointerdown=e=>{
-  e.preventDefault();
-  if(!running)return;
-  let r=el.getBoundingClientRect(),ar=arena.getBoundingClientRect();
-  el.remove();bonus=null;
-  if(pick.type==='time'){
-   time=Math.min(60,time+5);$('msg').textContent='⏱️ +5 secondes !';
-  }else if(pick.type==='coins'){
-   save.coins+=10;persist();$('msg').textContent='💰 +10 pièces !';
-  }else{
-   score+=50;$('msg').textContent='🔥 Bonus +50 points !';
+    soundOn = !soundOn;
+
+    soundBtn.textContent = soundOn ? "🔊" : "🔇";
+
+    if (soundOn) {
+      beep(700, .08, "sine");
+    }
+  });
+
+  /* ---------------- UTILITIES ---------------- */
+
+  function updateDisplay() {
+
+    scoreEl.textContent = score;
+    timerEl.textContent = timeLeft;
+    bestEl.textContent = bestScore;
+
+    if (timeLeft <= 10) {
+      timerEl.style.color = "#ff6678";
+    } else {
+      timerEl.style.color = "#65e6a6";
+    }
   }
-  beep(900,.15,'triangle',.08);floatText(pick.icon,r.left-ar.left,r.top-ar.top);update();
- };
- arena.appendChild(el);bonus=el;
- setTimeout(()=>{if(bonus===el){el.remove();bonus=null}},1300);
-}
 
-function hit(el){
- if(!running)return;
- hits++;
- let r=el.getBoundingClientRect(),ar=$('arena').getBoundingClientRect();
- let x=r.left-ar.left,y=r.top-ar.top;
- el.classList.add('hit');
- streak++;combo++;
- level=1+Math.floor(streak/10);
- let mult=1+Math.floor(streak/10);
- let points=10*mult+Math.min(combo,20);
- score+=points;
+  function random(min, max) {
+    return Math.random() * (max - min) + min;
+  }
 
- if(streak%10===0){
-  time=Math.min(60,time+2);
-  $('msg').textContent='🔥 Niveau '+level+' ! +2 secondes !';
-  beep(880,.16,'triangle',.08);
- }else{
-  $('msg').textContent='Combo x'+combo+' · multiplicateur x'+mult;
- }
+  function showFlash(type) {
 
- save.coins+=Math.max(1,Math.floor(mult/2));
- if(score>save.best)save.best=score;
- floatText('+'+points,x,y);
- beep(420+Math.min(level,10)*35,.07,'square',.05);
- persist();update();
+    flash.className = "flash " + type;
 
- setTimeout(()=>{if(running)spawn()},80);
-}
+    setTimeout(function () {
+      flash.className = "flash";
+    }, 220);
+  }
 
-function end(){
- running=false;clearInterval(timer);timer=null;stopMusic();
- if(target)target.remove();target=null;
- if(bonus)bonus.remove();bonus=null;
- $('arena').classList.remove('running');
- $('start').textContent='Rejouer';
- $('msg').textContent=`⏱️ Terminé ! Score : ${score} · Meilleur : ${save.best} · Précision : ${$('accuracy').textContent}`;
- persist();update();beep(180,.3,'sawtooth',.07);
-}
+  function updateCombo() {
 
-function start(){
- if(running)return;
- score=0;time=60;level=1;streak=0;combo=0;hits=0;misses=0;
- running=true;spawnToken=0;
- $('start').textContent='En cours…';
- $('msg').textContent='🚀 GO !';
- $('arena').classList.add('running');
- beep(520,.1,'square',.05);music();spawn();update();
- timer=setInterval(()=>{
-  time--;
-  if(time<=0){time=0;update();end()}
-  else update();
- },1000);
-}
+    if (combo >= 2) {
 
-$('start').onclick=start;
+      comboEl.textContent = "🔥 COMBO x" + combo;
+      comboEl.classList.add("visible");
 
-$('sound').onclick=()=>{
- soundOn=!soundOn;
- $('sound').textContent=soundOn?'🔊 Son ON':'🔇 Son OFF';
- if(soundOn){beep(600,.08);music()}else stopMusic();
-};
+    } else {
 
-$('reset').onclick=()=>{
- if(confirm('Effacer la progression, les pièces et les achats ?')){
-  if(running)end();
-  save={coins:0,owned:['red'],selected:'red',best:0};
-  persist();render();update();
-  $('msg').textContent='Progression réinitialisée.';
- }
-};
+      comboEl.classList.remove("visible");
+    }
+  }
 
-render();update();
-</script>
-</body>
-</html>
+  /* ---------------- TARGET ---------------- */
+
+  function moveTarget() {
+
+    if (!gameRunning) return;
+
+    const rect = arena.getBoundingClientRect();
+
+    const size = Math.max(
+      54,
+      Math.min(78, 74 - Math.floor(hits / 10) * 2)
+    );
+
+    target.style.width = size + "px";
+    target.style.height = size + "px";
+
+    const maxX = rect.width - size - 8;
+    const maxY = rect.height - size - 8;
+
+    const x = random(8, Math.max(8, maxX));
+    const y = random(8, Math.max(8, maxY));
+
+    target.style.left = x + "px";
+    target.style.top = y + "px";
+
+    /* Petite variation de couleur */
+    target.classList.remove("gold");
+    target.classList.remove("bad");
+
+    if (Math.random() < .10) {
+      target.classList.add("gold");
+      target.textContent = "★";
+    } else {
+      target.textContent = "●";
+    }
+
+    target.classList.remove("show");
+
+    /* Force le navigateur à rejouer l'animation */
+    void target.offsetWidth;
+
+    target.classList.add("show");
+
+    targetTime = performance.now();
+  }
+
+  /* ---------------- HIT ---------------- */
+
+  target.addEventListener("pointerdown", function (event) {
+
+    event.preventDefault();
+
+    if (!gameRunning) return;
+
+    const reaction = performance.now() - targetTime;
+
+    reactionTotal += reaction;
+
+    hits++;
+
+    combo++;
+
+    if (combo
