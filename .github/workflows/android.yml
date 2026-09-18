@@ -1,0 +1,49 @@
+name: Construire APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - principal
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Télécharger le dépôt
+        uses: actions/checkout@v4
+
+      - name: Installer Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Décompresser le kit
+        run: |
+          mkdir -p kit
+          unzip -o Reflexe60_Release_Kit_v1_0.zip -d kit
+
+      - name: Trouver le projet
+        run: |
+          PROJECT=$(find kit -name package.json -type f -print -quit | xargs dirname)
+          echo "PROJECT=$PROJECT" >> $GITHUB_ENV
+
+      - name: Installer les dépendances
+        working-directory: ${{ env.PROJECT }}
+        run: npm install
+
+      - name: Générer Android
+        working-directory: ${{ env.PROJECT }}
+        run: npx cap add android
+
+      - name: Construire APK
+        working-directory: ${{ env.PROJECT }}/android
+        run: ./gradlew assembleDebug
+
+      - name: Publier APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reflexe60-APK
+          path: ${{ env.PROJECT }}/android/app/build/outputs/apk/debug/app-debug.apk
