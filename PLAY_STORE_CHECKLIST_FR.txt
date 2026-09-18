@@ -1,0 +1,21 @@
+CHECKLIST DE PUBLICATION — GOOGLE PLAY
+
+[ ] Créer/valider le compte développeur Google Play
+[ ] Choisir le nom public du développeur
+[ ] Confirmer l'identité et les coordonnées
+[ ] Créer l'application « Réflexe 60 »
+[ ] Définir l'application comme Jeu
+[ ] Définir le package : com.reflexe60.game
+[ ] Préparer l'icône 512 px demandée par la fiche Play
+[ ] Préparer captures d'écran téléphone
+[ ] Ajouter description courte et longue
+[ ] Ajouter politique de confidentialité publique
+[ ] Remplir le questionnaire de classification du contenu
+[ ] Déclarer les données / sécurité des données selon les fonctions réellement utilisées
+[ ] Créer une version de test interne/fermée selon les exigences affichées dans Play Console
+[ ] Construire et signer un AAB
+[ ] Vérifier que targetSdkVersion = 36 ou plus
+[ ] Importer l'AAB
+[ ] Tester sur plusieurs téléphones
+[ ] Envoyer en examen
+[ ] Après approbation, publier

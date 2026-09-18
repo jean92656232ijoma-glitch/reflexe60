@@ -1,0 +1,25 @@
+COMMANDES — PROJET CAPACITOR
+
+Prérequis :
+Node.js + npm.
+Pour Android : Android Studio + Android SDK.
+Pour iOS : Mac + Xcode.
+
+Dans le dossier du projet :
+
+npm install
+npx cap add android
+npx cap add ios
+npx cap sync
+
+Android :
+npx cap open android
+Puis générer une version signée AAB avec Android Studio.
+Le package est : com.reflexe60.game
+
+iOS :
+npx cap open ios
+Puis ouvrir le projet avec Xcode, signer avec le compte Apple Developer et archiver/envoyer le build vers App Store Connect.
+
+IMPORTANT :
+Ce kit contient le jeu et la configuration prête pour Capacitor, mais la compilation finale Android/iOS dépend de l'environnement de développement et des signatures de développeur.

@@ -1,0 +1,17 @@
+CHECKLIST DE PUBLICATION — APP STORE
+
+[ ] Créer le compte Apple Developer
+[ ] Créer l'app dans App Store Connect
+[ ] Définir Bundle ID : com.reflexe60.game
+[ ] Préparer icône et captures d'écran
+[ ] Ajouter description, mots-clés et catégorie
+[ ] Remplir le questionnaire d'âge
+[ ] Ajouter la politique de confidentialité
+[ ] Configurer les informations de contact App Review
+[ ] Construire l'app iOS avec Xcode sur Mac
+[ ] Envoyer le build à App Store Connect
+[ ] Tester avec TestFlight
+[ ] Corriger les problèmes éventuels
+[ ] Choisir le build à soumettre
+[ ] Envoyer à App Review
+[ ] Après approbation, publier

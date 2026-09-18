@@ -1,0 +1,27 @@
+RÉFLEXE 60
+
+Titre :
+Réflexe 60
+
+Sous-titre / courte description :
+Teste tes réflexes pendant 60 secondes et bats ton meilleur score !
+
+Description longue :
+⚡ Réflexe 60 est un jeu rapide et simple : touche les boules le plus vite possible avant la fin du chrono.
+
+🎯 Progresse de niveau tous les 10 touchers.
+🔥 Enchaîne les combos et augmente ton multiplicateur.
+🪙 Gagne des pièces virtuelles et débloque de nouvelles boules.
+🔊 Joue avec ou sans son.
+🏆 Bats ton meilleur score.
+
+Le jeu est conçu pour des parties courtes, rapides et faciles à reprendre.
+
+Mots-clés proposés :
+réflexe, rapidité, jeu, arcade, score, défi, concentration, mobile, 60 secondes
+
+Nom du package Android :
+com.reflexe60.game
+
+Version :
+1.0.0

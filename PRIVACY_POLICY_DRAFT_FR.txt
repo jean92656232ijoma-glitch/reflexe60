@@ -1,0 +1,18 @@
+POLITIQUE DE CONFIDENTIALITÉ — RÉFLEXE 60
+Version 1.0.0
+
+Réflexe 60 est un jeu mobile édité par [NOM DU DÉVELOPPEUR].
+
+Données enregistrées localement :
+Le jeu peut enregistrer sur l'appareil du joueur son meilleur score, ses pièces virtuelles, les boules débloquées et la boule sélectionnée. Ces informations servent uniquement au fonctionnement du jeu.
+
+Aucune création de compte n'est nécessaire dans cette version.
+
+Publicité et services tiers :
+Cette version 1.0 ne contient pas encore de système publicitaire ni d'achat intégré. Si ces fonctions sont ajoutées, cette politique devra être mise à jour avant publication.
+
+Contact :
+[NOM DU DÉVELOPPEUR]
+[EMAIL DE CONTACT]
+
+Dernière mise à jour : [DATE]
